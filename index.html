@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Communicate via GitHub Actions </title>
+    <title>Communicate via GitHub Actions</title>
     <style>
         label {
             display: block;
@@ -20,26 +20,23 @@
     </style>
 </head>
 <body>
-    <h1>Communicate via GitHub Actions </h1>
+    <h1>Communicate via GitHub Actions</h1>
     <label for="urlInput">Enter the URL here:</label>
     <textarea id="urlInput" rows="1" cols="50"></textarea>
     <button onclick="sendRequest()">Send Request</button>
     <br><br>
     <button onclick="loadResponse()">Load Response</button>
-    <pre id="responseContent">Waiting for response...</pre>
+    <div id="responseContainer">Waiting for response...</div>
 
     <script>
+        const furl = 'https://proxyserver2-sandy.vercel.app/api/trigger-workflow'; // Updated URL
+
         async function sendRequest() {
             const url = document.getElementById('urlInput').value;
             const data = JSON.stringify({
                 ref: 'main',
                 inputs: { url: url }
             });
-            //const furl = 'https://api.github.com/repos/petehuu/hae/actions/workflows/142889037/dispatches';
-            //const furl = 'https://proxyserver-7of2r15xd-petehuus-projects.vercel.app';
-            const furl = 'https://proxyserver2-sandy.vercel.app/api/trigger-workflow';
-
-
 
             console.log('data:', data);
             console.log('url:', furl);
@@ -47,8 +44,7 @@
             const response = await fetch(furl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    //'Authorization': `token ${apiKey}`  // 401 virhe ja pat tuhoutuu
+                    'Content-Type': 'application/json'
                 },
                 body: data
             });
@@ -62,19 +58,19 @@
         }
 
         async function loadResponse() {
-            document.getElementById('responseContent').textContent = 'Waiting for response...';
+            document.getElementById('responseContainer').textContent = 'Waiting for response...';
 
             try {
                 const response = await fetch('https://raw.githubusercontent.com/petehuu/hae/main/response.txt');
                 if (response.ok) {
                     const data = await response.text();
-                    document.getElementById('responseContent').textContent = data;
+                    document.getElementById('responseContainer').innerHTML = data;
                 } else {
-                    document.getElementById('responseContent').textContent = `Error fetching the file: ${response.status} ${response.statusText}`;
+                    document.getElementById('responseContainer').textContent = `Error fetching the file: ${response.status} ${response.statusText}`;
                 }
             } catch (error) {
                 console.error('Error fetching the file:', error);
-                document.getElementById('responseContent').textContent = 'Error fetching the file';
+                document.getElementById('responseContainer').textContent = 'Error fetching the file';
             }
         }
     </script>
