@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test proxy</title>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        button {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test proxy</h1>
+    <label for="urlInput">Enter the URL here:</label>
+    <textarea id="urlInput" rows="1" cols="50"></textarea>
+    <button onclick="sendRequest()">Send Request</button>
+    <br><br>
+    <pre id="responseContent">Waiting for response...</pre>
+
+    <script>
+		function InitScreen() {
+    		document.getElementById('urlInput').textContent = "https://proxyserver2-sandy.vercel.app/api/proxy?url=https://";
+			document.getElementById('responseContent').textContent = "";
+		}
+        async function sendRequest() {
+            const url = document.getElementById('urlInput').value;
+            const furl = url;   //'https://api.github.com/repos/petehuu/hae/actions/workflows/142889037/dispatches';
+
+            console.log('url:', furl);
+            document.getElementById('responseContent').textContent = "Waiting for response...";
+
+            const response = await fetch(furl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+				const respText = await response.text();
+				document.getElementById('responseContent').textContent = respText;
+                //alert('Request sent successfully!');
+            } else {
+                const errorText = await response.text();
+                console.error(`Error sending the request: ${response.status} ${response.statusText}\n${errorText}`);
+                alert(`Error sending the request: ${response.status} ${response.statusText}`);
+            }
+        }
+		window.onload = InitScreen;
+    </script>
+</body>
+</html>
