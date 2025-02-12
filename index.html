@@ -9,15 +9,15 @@
     <h1>Request to Vercel API</h1>
     <input type="text" id="urlInput" placeholder="Enter URL">
     <button id="sendRequestButton">Send Request</button>
-    <p id="responseMessage"></p>
+    <pre id="responseContent"></pre>
 
     <script>
         document.getElementById('sendRequestButton').onclick = async function () {
             const urlInput = document.getElementById('urlInput').value;
-            const responseMessage = document.getElementById('responseMessage');
+            const responseContent = document.getElementById('responseContent');
 
             if (!urlInput) {
-                responseMessage.textContent = 'Please enter a URL';
+                responseContent.textContent = 'Please enter a URL';
                 return;
             }
 
@@ -31,14 +31,13 @@
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
-                    responseMessage.textContent = `Success: ${JSON.stringify(result)}`;
+                    responseContent.textContent = 'Request sent successfully! Check the GitHub Pages response.txt file for the result.';
                 } else {
                     const errorText = await response.text();
-                    responseMessage.textContent = `Error: ${errorText}`;
+                    responseContent.textContent = `Error: ${errorText}`;
                 }
             } catch (error) {
-                responseMessage.textContent = `Request failed: ${error.message}`;
+                responseContent.textContent = `Request failed: ${error.message}`;
             }
         };
     </script>
