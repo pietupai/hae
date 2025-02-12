@@ -31,8 +31,8 @@
                 });
 
                 if (response.ok) {
-                    const result = await response.text();
-                    responseMessage.textContent = `Success: ${result}`;
+                    const result = await response.json();
+                    responseMessage.textContent = `Success: ${JSON.stringify(result)}`;
                 } else {
                     const errorText = await response.text();
                     responseMessage.textContent = `Error: ${errorText}`;
