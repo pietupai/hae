@@ -16,6 +16,9 @@
             const urlInput = document.getElementById('urlInput').value;
             const responseContent = document.getElementById('responseContent');
 
+            // Clear previous response and show status
+            responseContent.textContent = 'Sending request...';
+
             if (!urlInput) {
                 responseContent.textContent = 'Please enter a URL';
                 return;
@@ -25,13 +28,30 @@
                 const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'text/plain'
                     },
                     body: JSON.stringify({ url: urlInput })
                 });
 
                 if (response.ok) {
-                    responseContent.textContent = 'Request sent successfully! Check the GitHub Pages response.txt file for the result.';
+                    responseContent.textContent = 'Request sent successfully! Waiting for the response...';
+
+                    // Polling function to check the response.txt file
+                    const pollResponse = setInterval(async () => {
+                        try {
+                            const responseFile = await fetch('https://raw.githubusercontent.com/pietupai/hae/main/response.txt');
+                            if (responseFile.ok) {
+                                const result = await responseFile.text();
+                                if (result) {
+                                    responseContent.textContent = result;
+                                    clearInterval(pollResponse);
+                                }
+                            }
+                        } catch (error) {
+                            responseContent.textContent = `Error fetching response: ${error.message}`;
+                        }
+                    }, 5000); // Check every 5 seconds
+
                 } else {
                     const errorText = await response.text();
                     responseContent.textContent = `Error: ${errorText}`;
