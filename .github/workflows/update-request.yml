@@ -30,7 +30,7 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m 'Update request.txt'
-          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/petehuu/hae.git
+          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/pietupai/hae.git
         fi
 
     - name: Fetch URL content and update response file
@@ -44,5 +44,5 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m 'Update response.txt'
-          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/petehuu/hae.git
+          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/pietupai/hae.git
         fi
