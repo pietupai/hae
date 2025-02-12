@@ -1,0 +1,48 @@
+name: Update Request File
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'The URL to fetch'
+        required: true
+
+jobs:
+  update-request-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Show received inputs
+      run: |
+        echo "Received URL: ${{ github.event.inputs.url }}"
+
+    - name: Update request file
+      run: |
+        URL=${{ github.event.inputs.url }}
+        echo "$URL" > request.txt
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add request.txt
+        if git diff --cached --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m 'Update request.txt'
+          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/petehuu/hae.git
+        fi
+
+    - name: Fetch URL content and update response file
+      run: |
+        URL=${{ github.event.inputs.url }}
+        echo "Fetching content from URL: $URL"
+        CONTENT=$(curl -s $URL)
+        echo "$CONTENT" > response.txt
+        git add response.txt
+        if git diff --cached --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m 'Update response.txt'
+          git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/petehuu/hae.git
+        fi

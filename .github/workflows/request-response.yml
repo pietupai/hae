@@ -1,0 +1,36 @@
+name: Request-Response Communication
+
+on:
+  push:
+    paths:
+      - request.txt
+
+jobs:
+  request-response:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Read request file
+      id: read-request
+      run: cat request.txt
+
+    - name: Fetch URL content
+      id: fetch-url
+      run: |
+        URL=$(cat request.txt)
+        echo "URL: $URL"
+        CONTENT=$(curl -s $URL)
+        echo "$CONTENT" > response.txt
+
+    - name: Commit and push response file
+      env:
+        GH_TOKEN_HAE: ${{ secrets.GH_TOKEN_HAE }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add response.txt
+        git commit -m 'Add response content'
+        git push https://x-access-token:${{ secrets.GH_TOKEN_HAE }}@github.com/petehuu/hae.git
