@@ -15,7 +15,7 @@
         document.getElementById('sendRequestButton').onclick = async function () {
             const urlInput = document.getElementById('urlInput').value;
             const responseContent = document.getElementById('responseContent');
-            
+
             // Clear previous response and show status
             responseContent.textContent = 'Sending request...';
 
@@ -54,9 +54,10 @@
 
                     let pollCount = 0;
                     const maxPollCount = 10; // Maximum polling count
+                    let pollDelay = 5000; // Initial delay in milliseconds (5 seconds)
 
                     // Polling function to check the response.txt file
-                    const pollResponse = setInterval(async () => {
+                    const pollResponse = async () => {
                         try {
                             pollCount++;
 
@@ -80,19 +81,25 @@
                                 // Check if response.txt has changed and is not empty
                                 if (currentResponseText && currentResponseText !== initialResponseText) {
                                     responseContent.textContent = currentResponseText;
-                                    clearInterval(pollResponse);
+                                } else {
+                                    setTimeout(pollResponse, pollDelay);
+                                    pollDelay *= 2; // Exponential backoff
                                 }
+                            } else {
+                                setTimeout(pollResponse, pollDelay);
+                                pollDelay *= 2; // Exponential backoff
                             }
 
                             // Stop polling after maxPollCount attempts
                             if (pollCount >= maxPollCount) {
                                 responseContent.textContent = 'Polling stopped after maximum attempts. Please try again.';
-                                clearInterval(pollResponse);
                             }
                         } catch (error) {
                             responseContent.textContent = `Error fetching response: ${error.message}`;
                         }
-                    }, 5000); // Check every 5 seconds
+                    };
+
+                    pollResponse();
 
                 } else {
                     const errorText = await response.text();
