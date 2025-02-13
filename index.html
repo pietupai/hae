@@ -57,8 +57,8 @@
                             } catch (error) {
                                 responseContent.textContent = `Error fetching response: ${error.message}`;
                             }
-                        }, 5000); // Check every 5 seconds
-                    }, 10000); // Initial 10 seconds delay
+                        }, 2000); // Check every 2 seconds
+                    }, 5000); // Initial 5 seconds delay
 
                 } else {
                     const errorText = await response.text();
