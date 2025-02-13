@@ -68,8 +68,8 @@
                 responseContent.textContent = `Error in window.onload: ${error.message}`;
             }
 
-            // Listen to webhook notifications
-            const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/webhook');
+            // Listen to SSE notifications
+            const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
             eventSource.onmessage = function (event) {
                 console.log('Webhook notification received:', event.data);
                 handleWebhookResponse(event.data);
