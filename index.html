@@ -50,8 +50,9 @@
 
         async function pollResponse(responseUrl, responseContent, initialResponseText, maxPollCount, pollDelay) {
             let pollCount = 0;
+            console.log('Starting polling...');
             const poll = async () => {
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Delay at each poll
+                await new Promise(resolve => setTimeout(resolve, pollDelay)); // Delay before each poll
                 try {
                     pollCount++;
                     const currentResponseText = await fetchFile(responseUrl);
@@ -122,7 +123,8 @@
 
                     if (response.ok) {
                         responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                        pollResponse(responseUrl, responseContent, responseContent.textContent, 10, 5000);
+                        await new Promise(resolve => setTimeout(resolve, 2000)); // Initial delay before starting poll
+                        pollResponse(responseUrl, responseContent, responseContent.textContent, 10, 2000); // Increased initial polling delay
                     } else {
                         const errorText = await response.text();
                         console.error('Workflow error:', errorText);
