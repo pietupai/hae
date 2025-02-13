@@ -14,7 +14,10 @@
     <script>
         async function fetchFile(url) {
             const response = await fetch(`https://proxyserver2-sandy.vercel.app/api/fetch-proxy?url=${url}`);
-            return response.text();
+            const data = await response.json();
+            // Decode base64 content
+            const decodedContent = atob(data.content.replace(/\n/g, ''));
+            return decodedContent;
         }
 
         async function fetchInitialFiles() {
