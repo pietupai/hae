@@ -54,6 +54,7 @@
 
         async function handleWebhookResponse(responseData) {
             const responseContent = document.getElementById('responseContent');
+            console.log('Webhook notification received:', responseData);
             responseContent.textContent = responseData;
         }
 
@@ -71,8 +72,10 @@
             // Listen to SSE notifications
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
             eventSource.onmessage = function (event) {
-                console.log('Webhook notification received:', event.data);
                 handleWebhookResponse(event.data);
+            };
+            eventSource.onerror = function (event) {
+                console.error('SSE connection error:', event);
             };
         };
 
