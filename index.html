@@ -77,7 +77,7 @@
             document.getElementById('sendRequestButton').onclick = async function () {
                 const urlSelect = document.getElementById('urlSelect').value;
                 const responseContent = document.getElementById('responseContent');
-                responseContent.textContent = '';  // Tyhjennä sisältö kyselyn ajaksi
+                responseContent.textContent = 'Haku käynnistetty, odotetaan vastausta...';
 
                 if (!urlSelect) {
                     responseContent.textContent = 'Please select a URL';
