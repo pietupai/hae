@@ -92,13 +92,14 @@
             const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
 
             try {
+                console.log('Fetching initial files before sending request...');
                 const { initialRequestText, initialResponseText } = await fetchInitialFiles();
+                console.log('Initial files fetched:', { initialRequestText, initialResponseText });
 
-                console.log('Fetching current files...');
+                console.log('Fetching current request and response files...');
                 const currentRequestText = await fetchFile(requestUrl);
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const currentResponseText = await fetchFile(responseUrl);
-
                 console.log('Current files fetched:', { currentRequestText, currentResponseText });
 
                 if (currentRequestText !== responseContent.textContent) {
