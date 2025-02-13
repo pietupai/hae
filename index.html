@@ -15,7 +15,7 @@
         document.getElementById('sendRequestButton').onclick = async function () {
             const urlInput = document.getElementById('urlInput').value;
             const responseContent = document.getElementById('responseContent');
-            
+
             // Clear previous response and show status
             responseContent.textContent = 'Sending request...';
 
@@ -24,10 +24,10 @@
                 return;
             }
 
-            const token = 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN';
+            const token = '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';
 
             try {
-                // Read initial request.txt and response.txt
+                // Read initial request.txt
                 const initialRequest = await fetch(`https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`, {
                     headers: {
                         'Accept': 'application/vnd.github.v3.raw',
@@ -36,6 +36,10 @@
                 });
                 const initialRequestText = await initialRequest.text();
 
+                // Delay 500ms before reading response.txt
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Read initial response.txt
                 const initialResponse = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
                     headers: {
                         'Accept': 'application/vnd.github.v3.raw',
@@ -65,7 +69,7 @@
                         try {
                             pollCount++;
 
-                            // Fetch the latest request.txt and response.txt
+                            // Fetch the latest request.txt
                             const currentRequest = await fetch(`https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`, {
                                 headers: {
                                     'Accept': 'application/vnd.github.v3.raw',
@@ -74,6 +78,10 @@
                             });
                             const currentRequestText = await currentRequest.text();
 
+                            // Delay 500ms before fetching response.txt
+                            await new Promise(resolve => setTimeout(resolve, 500));
+
+                            // Fetch the latest response.txt
                             const currentResponse = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
                                 headers: {
                                     'Accept': 'application/vnd.github.v3.raw',
