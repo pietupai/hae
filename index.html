@@ -50,7 +50,7 @@
                         } catch (error) {
                             responseContent.textContent = `Error fetching response: ${error.message}`;
                         }
-                    }, 2000); // Check every 5 seconds
+                    }, 5000); // Check every 5 seconds
 
                 } else {
                     const errorText = await response.text();
