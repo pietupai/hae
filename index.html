@@ -85,6 +85,7 @@
             const responseContent = document.getElementById('responseContent');
             try {
                 const { initialRequestText, initialResponseText } = await fetchInitialFiles();
+                console.log('Initial files loaded:', { initialRequestText, initialResponseText });
                 responseContent.textContent = initialResponseText;
             } catch (error) {
                 console.error('Error in window.onload function:', error);
@@ -129,7 +130,7 @@
 
                     if (response.ok) {
                         responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                        pollResponse(responseUrl, responseContent, responseContent.textContent, 20, 5000);
+                        pollResponse(responseUrl, responseContent, responseContent.textContent, 20, 10000);
                     } else {
                         const errorText = await response.text();
                         console.error('Workflow error:', errorText);
