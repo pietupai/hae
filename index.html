@@ -57,7 +57,9 @@
             const responseContent = document.getElementById('responseContent');
             try {
                 const updatedContent = await fetchFile(responseUrl);
-                responseContent.textContent = updatedContent;
+                if (updatedContent !== responseContent.textContent) {
+                    responseContent.textContent = updatedContent;
+                }
             } catch (error) {
                 console.error('Error checking for updates:', error);
             }
