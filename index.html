@@ -37,7 +37,7 @@
                     responseContent.textContent = 'Request sent successfully! Waiting for the response...';
 
                     // Polling function to check the response.txt file
-                    const pollResponse = setInterval(async () => {
+                    //const pollResponse = setInterval(async () => {
                         try {
                             const responseFile = await fetch('https://raw.githubusercontent.com/pietupai/hae/main/response.txt');
                             if (responseFile.ok) {
@@ -50,7 +50,7 @@
                         } catch (error) {
                             responseContent.textContent = `Error fetching response: ${error.message}`;
                         }
-                    }, 5000); // Check every 5 seconds
+                    //}, 5000); // Check every 5 seconds
 
                 } else {
                     const errorText = await response.text();
