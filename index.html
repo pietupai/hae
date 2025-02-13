@@ -39,8 +39,12 @@
                     // Polling function to check the response.txt file
                     const pollResponse = setInterval(async () => {
                         try {
-                            // Add a timestamp parameter to prevent caching
-                            const responseFile = await fetch(`https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=${new Date().getTime()}`);
+                            // Use GitHub API to fetch the latest response.txt
+                            const responseFile = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
+                                headers: {
+                                    'Accept': 'application/vnd.github.v3.raw'
+                                }
+                            });
                             if (responseFile.ok) {
                                 const result = await responseFile.text();
                                 if (result) {
