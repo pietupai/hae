@@ -14,8 +14,9 @@
     <script>
         async function fetchFile(url) {
             const response = await fetch(`https://proxyserver2-sandy.vercel.app/api/fetch-proxy?url=${url}`);
-            const text = await response.text();
-            return text;
+            const data = await response.json();
+            const decodedContent = atob(data.content.replace(/\n/g, ''));
+            return decodedContent;
         }
 
         async function fetchInitialFiles() {
@@ -29,9 +30,9 @@
             return { initialRequestText, initialResponseText };
         }
 
-        async function pollResponse(responseUrl, initialResponseText, responseContent, maxPollCount, pollDelay) {
+        async function pollResponse(responseUrl, responseContent, initialResponseText, maxPollCount, pollDelay) {
             let pollCount = 0;
-            const pollResponse = async () => {
+            const poll = async () => {
                 try {
                     pollCount++;
                     const currentResponseText = await fetchFile(responseUrl);
@@ -43,13 +44,13 @@
                         responseContent.textContent = 'Polling stopped after maximum attempts. Please try again.';
                         return;
                     }
-                    setTimeout(pollResponse, pollDelay);
+                    setTimeout(poll, pollDelay);
                     pollDelay *= 2; // Exponential backoff
                 } catch (error) {
                     responseContent.textContent = `Error fetching response: ${error.message}`;
                 }
             };
-            pollResponse();
+            poll();
         }
 
         window.onload = async function () {
@@ -72,13 +73,11 @@
             const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
 
             try {
-                const { initialRequestText, initialResponseText } = await fetchInitialFiles();
-
                 const currentRequestText = await fetchFile(requestUrl);
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const currentResponseText = await fetchFile(responseUrl);
 
-                if (currentRequestText !== initialRequestText) {
+                if (currentRequestText !== responseContent.textContent) {
                     // Trigger the workflow
                     const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
                         method: 'POST',
@@ -90,7 +89,7 @@
 
                     if (response.ok) {
                         responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                        pollResponse(responseUrl, currentResponseText, responseContent, 10, 5000);
+                        pollResponse(responseUrl, responseContent, responseContent.textContent, 10, 5000);
                     } else {
                         const errorText = await response.text();
                         responseContent.textContent = `Error: ${errorText}`;
