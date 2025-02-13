@@ -92,7 +92,7 @@
                 const urlSelect = document.getElementById('urlSelect').value;
                 const customUrl = document.getElementById('customUrlInput').value;
                 const responseContent = document.getElementById('responseContent');
-                responseContent.textContent = 'Haku käynnistetty, odotetaan vastausta...';
+                responseContent.textContent = 'Fetch started, waiting for response (30s delay) ...';
 
                 let url = urlSelect;
                 if (urlSelect === 'custom') {
