@@ -24,30 +24,7 @@
                 return;
             }
 
-            const token = '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';
-
             try {
-                // Read initial request.txt
-                const initialRequest = await fetch(`https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3.raw',
-                        'Authorization': `token ${token}`
-                    }
-                });
-                const initialRequestText = await initialRequest.text();
-
-                // Delay 500ms before reading response.txt
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                // Read initial response.txt
-                const initialResponse = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3.raw',
-                        'Authorization': `token ${token}`
-                    }
-                });
-                const initialResponseText = await initialResponse.text();
-
                 // Trigger the workflow
                 const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
                     method: 'POST',
@@ -70,24 +47,14 @@
                             pollCount++;
 
                             // Fetch the latest request.txt
-                            const currentRequest = await fetch(`https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`, {
-                                headers: {
-                                    'Accept': 'application/vnd.github.v3.raw',
-                                    'Authorization': `token ${token}`
-                                }
-                            });
+                            const currentRequest = await fetch(`https://proxyserver2-sandy.vercel.app/api/proxy?url=https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`);
                             const currentRequestText = await currentRequest.text();
 
                             // Delay 500ms before fetching response.txt
                             await new Promise(resolve => setTimeout(resolve, 500));
 
                             // Fetch the latest response.txt
-                            const currentResponse = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
-                                headers: {
-                                    'Accept': 'application/vnd.github.v3.raw',
-                                    'Authorization': `token ${token}`
-                                }
-                            });
+                            const currentResponse = await fetch(`https://proxyserver2-sandy.vercel.app/api/proxy?url=https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`);
                             const currentResponseText = await currentResponse.text();
 
                             // Check if request.txt has changed or it's an initial load
