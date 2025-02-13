@@ -1,3 +1,7 @@
-<HEAD><TITLE>Redirection</TITLE></HEAD>
-<BODY><H1>Query redirected to another address</H1>
-This is only a redirection service, the document can be found <A HREF="http://www.iki.fi/index.html">here</A>.<P></BODY>
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx/1.22.1</center>
+</body>
+</html>
