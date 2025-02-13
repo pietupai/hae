@@ -74,42 +74,41 @@
                 responseContent.textContent = `Error in window.onload: ${error.message}`;
             }
 
-            // Poll for updates every 30 seconds
-            setInterval(checkForUpdates, 30000);
-        };
+            document.getElementById('sendRequestButton').onclick = async function () {
+                const urlSelect = document.getElementById('urlSelect').value;
+                const responseContent = document.getElementById('responseContent');
+                responseContent.textContent = '';  // Tyhjennä sisältö kyselyn ajaksi
 
-        document.getElementById('sendRequestButton').onclick = async function () {
-            const urlSelect = document.getElementById('urlSelect').value;
-            const responseContent = document.getElementById('responseContent');
-            responseContent.textContent = 'Sending request...';
-
-            if (!urlSelect) {
-                responseContent.textContent = 'Please select a URL';
-                return;
-            }
-
-            try {
-                const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify({ url: urlSelect })
-                });
-
-                if (response.ok) {
-                    responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                    // Poll for updates
-                    setInterval(checkForUpdates, 30000);
-                } else {
-                    const errorText = await response.text();
-                    console.error('Workflow error:', errorText);
-                    responseContent.textContent = `Error: ${errorText}`;
+                if (!urlSelect) {
+                    responseContent.textContent = 'Please select a URL';
+                    return;
                 }
-            } catch (error) {
-                console.error('Request failed:', error);
-                responseContent.textContent = `Request failed: ${error.message}`;
-            }
+
+                try {
+                    const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        },
+                        body: JSON.stringify({ url: urlSelect })
+                    });
+
+                    if (response.ok) {
+                        // Poll for updates after 30 seconds
+                        setTimeout(() => {
+                            checkForUpdates();
+                            setInterval(checkForUpdates, 30000);
+                        }, 30000);
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Workflow error:', errorText);
+                        responseContent.textContent = `Error: ${errorText}`;
+                    }
+                } catch (error) {
+                    console.error('Request failed:', error);
+                    responseContent.textContent = `Request failed: ${error.message}`;
+                }
+            };
         };
     </script>
 </body>
