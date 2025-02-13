@@ -50,8 +50,8 @@
 
         async function pollResponse(responseUrl, responseContent, initialResponseText, maxPollCount, pollDelay) {
             let pollCount = 0;
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Initial delay before polling
             const poll = async () => {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Delay at each poll
                 try {
                     pollCount++;
                     const currentResponseText = await fetchFile(responseUrl);
