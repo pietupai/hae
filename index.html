@@ -11,7 +11,9 @@
         <option value="www.iki.fi">www.iki.fi</option>
         <option value="www.google.com">www.google.com</option>
         <option value="www.example.com">www.example.com</option>
+        <option value="custom">Oma osoite</option>
     </select>
+    <input type="text" id="customUrlInput" placeholder="Anna oma osoite" style="display:none;">
     <button id="sendRequestButton">Send Request</button>
     <pre id="responseContent"></pre>
 
@@ -52,18 +54,28 @@
             return { initialRequestText, initialResponseText };
         }
 
-        async function checkForUpdates() {
+        async function checkForUpdates(intervalId) {
             const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
             const responseContent = document.getElementById('responseContent');
             try {
                 const updatedContent = await fetchFile(responseUrl);
                 if (updatedContent !== responseContent.textContent) {
                     responseContent.textContent = updatedContent;
+                    clearInterval(intervalId);  // Lopeta polling kun uusi vastaus löytyy
                 }
             } catch (error) {
                 console.error('Error checking for updates:', error);
             }
         }
+
+        document.getElementById('urlSelect').onchange = function () {
+            const customUrlInput = document.getElementById('customUrlInput');
+            if (this.value === 'custom') {
+                customUrlInput.style.display = 'block';
+            } else {
+                customUrlInput.style.display = 'none';
+            }
+        };
 
         window.onload = async function () {
             const responseContent = document.getElementById('responseContent');
@@ -78,10 +90,16 @@
 
             document.getElementById('sendRequestButton').onclick = async function () {
                 const urlSelect = document.getElementById('urlSelect').value;
+                const customUrl = document.getElementById('customUrlInput').value;
                 const responseContent = document.getElementById('responseContent');
                 responseContent.textContent = 'Haku käynnistetty, odotetaan vastausta...';
 
-                if (!urlSelect) {
+                let url = urlSelect;
+                if (urlSelect === 'custom') {
+                    url = customUrl;
+                }
+
+                if (!url) {
                     responseContent.textContent = 'Please select a URL';
                     return;
                 }
@@ -92,14 +110,13 @@
                         headers: {
                             'Content-Type': 'text/plain'
                         },
-                        body: JSON.stringify({ url: urlSelect })
+                        body: JSON.stringify({ url })
                     });
 
                     if (response.ok) {
                         // Poll for updates after 30 seconds
                         setTimeout(() => {
-                            checkForUpdates();
-                            setInterval(checkForUpdates, 30000);
+                            const intervalId = setInterval(() => checkForUpdates(intervalId), 30000);
                         }, 30000);
                     } else {
                         const errorText = await response.text();
