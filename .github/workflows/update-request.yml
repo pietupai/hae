@@ -23,13 +23,15 @@ jobs:
       run: |
         URL=${{ github.event.inputs.url }}
         echo "$URL" > request.txt
+        # Clear the content of response.txt
+        > response.txt
         git config --global user.name 'github-actions[bot]'
         git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-        git add request.txt
+        git add request.txt response.txt
         if git diff --cached --quiet; then
           echo "No changes to commit"
         else
-          git commit -m 'Update request.txt'
+          git commit -m 'Update request.txt and clear response.txt'
           git push https://x-access-token:${{ secrets.GH_OMA }}@github.com/pietupai/hae.git
         fi
 
