@@ -54,15 +54,12 @@
             return { initialRequestText, initialResponseText };
         }
 
-        async function checkForUpdates(intervalId) {
+        async function checkForUpdates() {
             const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
             const responseContent = document.getElementById('responseContent');
             try {
                 const updatedContent = await fetchFile(responseUrl);
-                if (updatedContent !== responseContent.textContent) {
-                    responseContent.textContent = updatedContent;
-                    clearInterval(intervalId);  // Lopeta polling kun uusi vastaus löytyy
-                }
+                responseContent.textContent = updatedContent;
             } catch (error) {
                 console.error('Error checking for updates:', error);
             }
@@ -114,10 +111,8 @@
                     });
 
                     if (response.ok) {
-                        // Poll for updates after 30 seconds
-                        setTimeout(() => {
-                            const intervalId = setInterval(() => checkForUpdates(intervalId), 30000);
-                        }, 30000);
+                        // Perform a single update check after 30 seconds
+                        setTimeout(checkForUpdates, 30000);
                     } else {
                         const errorText = await response.text();
                         console.error('Workflow error:', errorText);
