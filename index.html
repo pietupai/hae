@@ -37,28 +37,22 @@
                     responseContent.textContent = 'Request sent successfully! Waiting for the response...';
 
                     // Initial delay before starting to poll
-                    setTimeout(() => {
-                        // Polling function to check the response.txt file
-                        const pollResponse = setInterval(async () => {
-                            try {
-                                // Use GitHub API to fetch the latest response.txt
-                                const responseFile = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
-                                    headers: {
-                                        'Accept': 'application/vnd.github.v3.raw'
-                                    }
-                                });
-                                if (responseFile.ok) {
-                                    const result = await responseFile.text();
-                                    if (result) {
-                                        responseContent.textContent = result;
-                                        clearInterval(pollResponse);
-                                    }
+                    setTimeout(async () => {
+                        try {
+                            // Use GitHub API to fetch the latest response.txt
+                            const responseFile = await fetch(`https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=${new Date().getTime()}`, {
+                                headers: {
+                                    'Accept': 'application/vnd.github.v3.raw'
                                 }
-                            } catch (error) {
-                                responseContent.textContent = `Error fetching response: ${error.message}`;
+                            });
+                            if (responseFile.ok) {
+                                const result = await responseFile.text();
+                                responseContent.textContent = result;
                             }
-                        }, 2000); // Check every 2 seconds
-                    }, 5000); // Initial 5 seconds delay
+                        } catch (error) {
+                            responseContent.textContent = `Error fetching response: ${error.message}`;
+                        }
+                    }, 10000); // Initial 10 seconds delay
 
                 } else {
                     const errorText = await response.text();
