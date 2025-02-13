@@ -80,3 +80,22 @@
                     headers: {
                         'Content-Type': 'text/plain'
                     },
+                    body: JSON.stringify({ url: urlSelect })
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    responseContent.textContent = responseData.message;
+                } else {
+                    const errorText = await response.text();
+                    console.error('Workflow error:', errorText);
+                    responseContent.textContent = `Error: ${errorText}`;
+                }
+            } catch (error) {
+                console.error('Request failed:', error);
+                responseContent.textContent = `Request failed: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>
