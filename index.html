@@ -1,49 +1,66 @@
-document.getElementById('sendRequestButton').onclick = async function () {
-    const urlInput = document.getElementById('urlInput').value;
-    const responseContent = document.getElementById('responseContent');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request to Vercel API</title>
+</head>
+<body>
+    <h1>Request to Vercel API</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL">
+    <button id="sendRequestButton">Send Request</button>
+    <pre id="responseContent"></pre>
 
-    // Clear previous response and show status
-    responseContent.textContent = 'Sending request...';
+    <script>
+        document.getElementById('sendRequestButton').onclick = async function () {
+            const urlInput = document.getElementById('urlInput').value;
+            const responseContent = document.getElementById('responseContent');
 
-    if (!urlInput) {
-        responseContent.textContent = 'Please enter a URL';
-        return;
-    }
+            // Clear previous response and show status
+            responseContent.textContent = 'Sending request...';
 
-    try {
-        const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify({ url: urlInput })
-        });
+            if (!urlInput) {
+                responseContent.textContent = 'Please enter a URL';
+                return;
+            }
 
-        if (response.ok) {
-            responseContent.textContent = 'Request sent successfully! Waiting for the response...';
+            try {
+                const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify({ url: urlInput })
+                });
 
-            // Polling function to check the response.txt file
-            const pollResponse = setInterval(async () => {
-                try {
-                    // Add a timestamp parameter to prevent caching
-                    const responseFile = await fetch(`https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=${new Date().getTime()}`);
-                    if (responseFile.ok) {
-                        const result = await responseFile.text();
-                        if (result) {
-                            responseContent.textContent = result;
-                            clearInterval(pollResponse);
+                if (response.ok) {
+                    responseContent.textContent = 'Request sent successfully! Waiting for the response...';
+
+                    // Polling function to check the response.txt file
+                    const pollResponse = setInterval(async () => {
+                        try {
+                            // Add a timestamp parameter to prevent caching
+                            const responseFile = await fetch(`https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=${new Date().getTime()}`);
+                            if (responseFile.ok) {
+                                const result = await responseFile.text();
+                                if (result) {
+                                    responseContent.textContent = result;
+                                    clearInterval(pollResponse);
+                                }
+                            }
+                        } catch (error) {
+                            responseContent.textContent = `Error fetching response: ${error.message}`;
                         }
-                    }
-                } catch (error) {
-                    responseContent.textContent = `Error fetching response: ${error.message}`;
-                }
-            }, 5000); // Check every 5 seconds
+                    }, 5000); // Check every 5 seconds
 
-        } else {
-            const errorText = await response.text();
-            responseContent.textContent = `Error: ${errorText}`;
-        }
-    } catch (error) {
-        responseContent.textContent = `Request failed: ${error.message}`;
-    }
-};
+                } else {
+                    const errorText = await response.text();
+                    responseContent.textContent = `Error: ${errorText}`;
+                }
+            } catch (error) {
+                responseContent.textContent = `Request failed: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>
