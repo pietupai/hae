@@ -62,6 +62,7 @@
                                 // Check if response.txt has changed and is not empty
                                 if (currentResponseText && currentResponseText !== initialResponseText) {
                                     responseContent.textContent = currentResponseText;
+                                    clearInterval(pollResponse);
                                 } else {
                                     setTimeout(pollResponse, pollDelay);
                                     pollDelay *= 2; // Exponential backoff
@@ -74,6 +75,7 @@
                             // Stop polling after maxPollCount attempts
                             if (pollCount >= maxPollCount) {
                                 responseContent.textContent = 'Polling stopped after maximum attempts. Please try again.';
+                                clearInterval(pollResponse);
                             }
                         } catch (error) {
                             responseContent.textContent = `Error fetching response: ${error.message}`;
