@@ -74,8 +74,8 @@
                 responseContent.textContent = `Error in window.onload: ${error.message}`;
             }
 
-            // Poll for updates every 60 seconds
-            setInterval(checkForUpdates, 60000);
+            // Poll for updates every 30 seconds
+            setInterval(checkForUpdates, 30000);
         };
 
         document.getElementById('sendRequestButton').onclick = async function () {
@@ -100,7 +100,7 @@
                 if (response.ok) {
                     responseContent.textContent = 'Request sent successfully! Waiting for the response...';
                     // Poll for updates
-                    setInterval(checkForUpdates, 60000);
+                    setInterval(checkForUpdates, 30000);
                 } else {
                     const errorText = await response.text();
                     console.error('Workflow error:', errorText);
