@@ -52,9 +52,14 @@
                 if (response.ok) {
                     responseContent.textContent = 'Request sent successfully! Waiting for the response...';
 
+                    let pollCount = 0;
+                    const maxPollCount = 10; // Maximum polling count
+
                     // Polling function to check the response.txt file
                     const pollResponse = setInterval(async () => {
                         try {
+                            pollCount++;
+
                             // Fetch the latest request.txt and response.txt
                             const currentRequest = await fetch(`https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=${new Date().getTime()}`, {
                                 headers: {
@@ -70,13 +75,19 @@
                             });
                             const currentResponseText = await currentResponse.text();
 
-                            // Check if request.txt has changed
-                            if (currentRequestText !== initialRequestText) {
+                            // Check if request.txt has changed or it's an initial load
+                            if (currentRequestText !== initialRequestText || pollCount === 1) {
                                 // Check if response.txt has changed and is not empty
                                 if (currentResponseText && currentResponseText !== initialResponseText) {
                                     responseContent.textContent = currentResponseText;
                                     clearInterval(pollResponse);
                                 }
+                            }
+
+                            // Stop polling after maxPollCount attempts
+                            if (pollCount >= maxPollCount) {
+                                responseContent.textContent = 'Polling stopped after maximum attempts. Please try again.';
+                                clearInterval(pollResponse);
                             }
                         } catch (error) {
                             responseContent.textContent = `Error fetching response: ${error.message}`;
