@@ -52,10 +52,15 @@
             return { initialRequestText, initialResponseText };
         }
 
-        async function handleWebhookResponse(responseData) {
+        async function checkForUpdates() {
+            const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
             const responseContent = document.getElementById('responseContent');
-            console.log('Webhook notification received:', responseData);
-            responseContent.textContent = responseData;
+            try {
+                const updatedContent = await fetchFile(responseUrl);
+                responseContent.textContent = updatedContent;
+            } catch (error) {
+                console.error('Error checking for updates:', error);
+            }
         }
 
         window.onload = async function () {
@@ -69,14 +74,8 @@
                 responseContent.textContent = `Error in window.onload: ${error.message}`;
             }
 
-            // Listen to SSE notifications
-            const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
-            eventSource.onmessage = function (event) {
-                handleWebhookResponse(event.data);
-            };
-            eventSource.onerror = function (event) {
-                console.error('SSE connection error:', event);
-            };
+            // Poll for updates every 60 seconds
+            setInterval(checkForUpdates, 60000);
         };
 
         document.getElementById('sendRequestButton').onclick = async function () {
@@ -100,6 +99,8 @@
 
                 if (response.ok) {
                     responseContent.textContent = 'Request sent successfully! Waiting for the response...';
+                    // Poll for updates
+                    setInterval(checkForUpdates, 60000);
                 } else {
                     const errorText = await response.text();
                     console.error('Workflow error:', errorText);
