@@ -130,7 +130,7 @@
 
                     if (response.ok) {
                         responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                        pollResponse(responseUrl, responseContent, responseContent.textContent, 20, 10000);
+                        pollResponse(responseUrl, responseContent, responseContent.textContent, 20, 15000); // Increased poll delay to 15 seconds
                     } else {
                         const errorText = await response.text();
                         console.error('Workflow error:', errorText);
