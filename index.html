@@ -52,35 +52,6 @@
             return { initialRequestText, initialResponseText };
         }
 
-        async function pollResponse(responseUrl, responseContent, initialResponseText, maxPollCount, pollDelay) {
-            let pollCount = 0;
-            console.log('Starting polling...');
-            await new Promise(resolve => setTimeout(resolve, pollDelay)); // Initial delay before polling
-
-            const poll = async () => {
-                try {
-                    pollCount++;
-                    console.log(`Poll count: ${pollCount}`);
-                    const currentResponseText = await fetchFile(responseUrl);
-                    console.log(`Polling response (${pollCount}):`, currentResponseText);
-                    if (currentResponseText && currentResponseText !== initialResponseText) {
-                        responseContent.textContent = currentResponseText;
-                        return;
-                    }
-                    if (pollCount >= maxPollCount) {
-                        responseContent.textContent = 'Polling stopped after maximum attempts. Please try again.';
-                        return;
-                    }
-                    setTimeout(poll, pollDelay);
-                    pollDelay *= 2; // Exponential backoff
-                } catch (error) {
-                    console.error(`Error fetching response for ${responseUrl}:`, error);
-                    responseContent.textContent = `Error fetching response: ${error.message}`;
-                }
-            };
-            poll();
-        }
-
         window.onload = async function () {
             const responseContent = document.getElementById('responseContent');
             try {
@@ -103,41 +74,22 @@
                 return;
             }
 
-            const requestUrl = 'https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=' + new Date().getTime();
-            const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
-
             try {
-                console.log('Fetching initial files before sending request...');
-                const { initialRequestText, initialResponseText } = await fetchInitialFiles();
-                console.log('Initial files fetched:', { initialRequestText, initialResponseText });
+                const response = await fetch('https://proxyserver2-sandy.vercel.app/api/get-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: urlSelect })
+                });
 
-                console.log('Fetching current request and response files...');
-                const currentRequestText = await fetchFile(requestUrl);
-                await new Promise(resolve => setTimeout(resolve, 500));
-                const currentResponseText = await fetchFile(responseUrl);
-                console.log('Current files fetched:', { currentRequestText, currentResponseText });
-
-                if (currentRequestText !== responseContent.textContent) {
-                    console.log('Triggering workflow...');
-                    const response = await fetch('https://proxyserver2-sandy.vercel.app/api/trigger-workflow', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'text/plain'
-                        },
-                        body: JSON.stringify({ url: urlSelect })
-                    });
-                    console.log('Workflow response:', response);
-
-                    if (response.ok) {
-                        responseContent.textContent = 'Request sent successfully! Waiting for the response...';
-                        pollResponse(responseUrl, responseContent, responseContent.textContent, 20, 15000); // Increased poll delay to 15 seconds
-                    } else {
-                        const errorText = await response.text();
-                        console.error('Workflow error:', errorText);
-                        responseContent.textContent = `Error: ${errorText}`;
-                    }
+                if (response.ok) {
+                    const responseData = await response.json();
+                    responseContent.textContent = responseData.message;
                 } else {
-                    responseContent.textContent = currentResponseText;
+                    const errorText = await response.text();
+                    console.error('Workflow error:', errorText);
+                    responseContent.textContent = `Error: ${errorText}`;
                 }
             } catch (error) {
                 console.error('Request failed:', error);
