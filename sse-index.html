@@ -19,8 +19,9 @@
         };
 
         eventSource.onerror = function(event) {
-            console.error('SSE error:');
-            //console.error('SSE error:', event);
+            console.error('SSE error: Start');
+            console.error('SSE error:', event);
+            console.error('SSE error: End');
         };
     </script>
 </body>
