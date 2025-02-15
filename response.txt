@@ -1,5 +1,5 @@
 <html>
-<head><title>301 Moved Permanently 123</title></head>
+<head><title>301 Moved Permanently 12345</title></head>
 <body>
 <center><h1>301 Moved Permanently</h1></center>
 <hr><center>nginx/1.22.1</center>
