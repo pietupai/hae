@@ -9,7 +9,7 @@
     <h1>SSE Demo</h1>
     <div id="notification"></div>
     <script>
-        const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
+        const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
 
         eventSource.onmessage = function(event) {
             const notificationDiv = document.getElementById('notification');
