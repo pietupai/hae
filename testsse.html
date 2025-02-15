@@ -8,12 +8,17 @@
 <body>
     <h1>SSE Demo</h1>
     <div id="time"></div>
+    <div id="messageCount"></div>
     <script>
+        let messageCount = 0;
+
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
 
             eventSource.onmessage = function(event) {
+                messageCount++;
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
+                document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
             };
         }
 
