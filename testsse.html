@@ -25,8 +25,8 @@
                 // Pidempi viive ennen yhteyden katkaisua ja uudelleen avaamista
                 setTimeout(() => {
                     eventSource.close();
-                    setTimeout(startEventSource, 2000); // Yritä uudelleen yhdistämistä 2 sekunnin kuluttua
-                }, 3000); // 3 sekunnin viive ennen yhteyden katkaisua
+                    setTimeout(startEventSource, 5000); // Yritä uudelleen yhdistämistä 5 sekunnin kuluttua
+                }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
             };
 
             eventSource.onerror = function(event) {  
