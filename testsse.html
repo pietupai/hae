@@ -11,7 +11,7 @@
     <div id="messageCount"></div>
     <script>
         let messageCount = 0;
-        let error_count = 0;
+        let errorCount = 0;
 
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
@@ -21,10 +21,17 @@
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
             };
+
             eventSource.onerror = function(event) {  
-                error_count++;
-                console.log('SSE error: count = ', error_count);
-                console.error('SSE error:', event);    
+                errorCount++;
+                console.log('SSE error: count =', errorCount);
+                console.error('SSE error:', event);
+
+                // Close the current connection
+                eventSource.close();
+
+                // Attempt to reconnect after a delay
+                setTimeout(startEventSource, 5000); // 5 seconds delay
             };
         }
 
