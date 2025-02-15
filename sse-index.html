@@ -1,1 +1,22 @@
-Response file changed at 2025-02-15 02:15:27
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Demo</title>
+</head>
+<body>
+    <h1>SSE Demo</h1>
+    <div id="notification"></div>
+    <script>
+        const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
+
+        eventSource.onmessage = function(event) {
+            const notificationDiv = document.getElementById('notification');
+            const newMessage = document.createElement('p');
+            newMessage.innerText = event.data;
+            notificationDiv.appendChild(newMessage);
+        };
+    </script>
+</body>
+</html>
