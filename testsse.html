@@ -12,6 +12,7 @@
     <script>
         let messageCount = 0;
         let errorCount = 0;
+        let reconnectAttempts = 0;
 
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
@@ -20,22 +21,23 @@
                 messageCount++;
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+                reconnectAttempts = 0; // Nollaa uudelleen yhdistämisyritykset
             };
 
             eventSource.onerror = function(event) {  
                 errorCount++;
                 console.log('SSE error: count =', errorCount);
                 console.error('SSE error:', event);
-
-                // Close the current connection
+                
+                // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
                 eventSource.close();
-
-                // Attempt to reconnect after a delay
-                setTimeout(startEventSource, 5000); // 5 seconds delay
+                reconnectAttempts++;
+                const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
+                setTimeout(startEventSource, reconnectDelay);
             };
         }
 
-        // Start the EventSource connection initially
+        // Aloita EventSource-yhteys aluksi
         startEventSource();
     </script>
 </body>
