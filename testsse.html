@@ -22,10 +22,10 @@
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
 
-                // Pidempi viive ennen yhteyden katkaisua ja uuden avaamista
+                // Pidempi viive ennen yhteyden katkaisua ja uudelleen avaamista
                 setTimeout(() => {
                     eventSource.close();
-                    setTimeout(startEventSource, 500); // Yritä uudelleen yhdistämistä 0,5 sekunnin kuluttua
+                    setTimeout(startEventSource, 2000); // Yritä uudelleen yhdistämistä 2 sekunnin kuluttua
                 }, 3000); // 3 sekunnin viive ennen yhteyden katkaisua
             };
 
