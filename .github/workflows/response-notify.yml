@@ -16,4 +16,4 @@ jobs:
     - name: Send webhook notification
       run: |
         TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-        curl -X POST -H "Content-Type: application/json" -d '{"text": "response.txt file changed at '$TIMESTAMP'"}' https://your-server.com/webhook
+        curl -X POST -H "Content-Type: application/json" -d '{"text": "response.txt file changed at '$TIMESTAMP'"}' https://proxyserver2-sandy.vercel.app/api/webhook
