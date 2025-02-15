@@ -10,7 +10,7 @@
     <div id="messages"></div>
     <script>
         const messagesDiv = document.getElementById('messages');
-        const ws = new WebSocket('wss://your-vercel-app.vercel.app');
+        const ws = new WebSocket('wss://https://proxyserver2-sandy.vercel.app/api/websocket');
 
         ws.onopen = () => {
             messagesDiv.innerHTML += '<p>Connected to WebSocket server.</p>';
