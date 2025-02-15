@@ -21,14 +21,17 @@
                 messageCount++;
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
-                reconnectAttempts = 0; // Nollaa uudelleen yhdistämisyritykset
+
+                // Sulje nykyinen yhteys ja avaa uusi pienen viiveen jälkeen
+                eventSource.close();
+                setTimeout(startEventSource, 500); // Yritä uudelleen yhdistämistä 0,5 sekunnin kuluttua
             };
 
             eventSource.onerror = function(event) {  
                 errorCount++;
                 console.log('SSE error: count =', errorCount);
                 console.error('SSE error:', event);
-                
+
                 // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
                 eventSource.close();
                 reconnectAttempts++;
