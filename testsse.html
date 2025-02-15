@@ -27,8 +27,8 @@
                     // Viive ennen yhteyden katkaisua ja uudelleen avaamista
                     setTimeout(() => {
                         eventSource.close();
-                        setTimeout(startEventSource, 1000); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
-                    }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
+                        setTimeout(startEventSource, 3000); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
+                    }, 4000); // 5 sekunnin viive ennen yhteyden katkaisua
                 };
 
                 eventSource.onerror = function(event) {
@@ -42,7 +42,7 @@
                     const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
                     setTimeout(startEventSource, reconnectDelay);
                 };
-            }, 1000); // 1 sekunnin viive yhteyden muodostumisen jälkeen
+            }, 200); // 1 sekunnin viive yhteyden muodostumisen jälkeen
         }
 
         // Aloita EventSource-yhteys aluksi
