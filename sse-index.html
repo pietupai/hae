@@ -12,14 +12,14 @@
         const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
 
         eventSource.onmessage = function(event) {
-            //const notificationDiv = document.getElementById('notification');
-            //const newMessage = document.createElement('p');
-            console.log('Got SSE:');
-            //newMessage.innerText = event.data;
-            //notificationDiv.appendChild(newMessage);
+            const notificationDiv = document.getElementById('notification');
+            const newMessage = document.createElement('p');
+            console.log('Got SSE: {$event.data}');
+            newMessage.innerText = event.data;
+            notificationDiv.appendChild(newMessage);
         };
 
-        //eventSource.onerror = function(event) {  console.error('SSE error:', event);    };
+        eventSource.onerror = function(event) {  console.error('SSE error:', event);    };
     </script>
 </body>
 </html>
