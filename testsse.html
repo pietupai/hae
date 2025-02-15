@@ -18,7 +18,7 @@
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
 
             // Viive yhteyden muodostumisen jälkeen
-            setTimeout(() => {
+            //setTimeout(() => {
                 eventSource.onmessage = function(event) {
                     messageCount++;
                     document.getElementById('time').innerText = 'Server time: ' + event.data;
@@ -42,7 +42,7 @@
                     const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
                     setTimeout(startEventSource, reconnectDelay);
                 };
-            }, 100); // 1 sekunnin viive yhteyden muodostumisen jälkeen
+            //}, 100); // 1 sekunnin viive yhteyden muodostumisen jälkeen
         }
 
         // Aloita EventSource-yhteys aluksi
