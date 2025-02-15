@@ -14,7 +14,8 @@
         eventSource.onmessage = function(event) {
             const notificationDiv = document.getElementById('notification');
             const newMessage = document.createElement('p');
-            console.log('Got SSE: {$event.data}');
+            const data = event.data;
+            console.log('Got SSE: {$data}');
             newMessage.innerText = event.data;
             notificationDiv.appendChild(newMessage);
         };
