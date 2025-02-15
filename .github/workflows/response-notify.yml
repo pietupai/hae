@@ -13,12 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Update sse-index.html
+    - name: Send webhook notification
       run: |
         TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-        echo "Response file changed at $TIMESTAMP" > sse-index.html
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-        git add sse-index.html
-        git commit -m "Update sse-index.html with change notification"
-        git push
+        curl -X POST -H "Content-Type: application/json" -d '{"text": "response.txt file changed at '$TIMESTAMP'"}' https://your-server.com/webhook
