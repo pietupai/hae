@@ -22,6 +22,8 @@
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
             };
             eventSource.onerror = function(event) {  
+                error_count++;
+                console.log('SSE error: count = ', error_count);
                 console.error('SSE error:', event);    
             };
         }
