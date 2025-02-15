@@ -10,6 +10,7 @@
     <div id="notification"></div>
     <script>
         const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
+        contst error_count = 0;
 
         eventSource.onmessage = function(event) {
             const notificationDiv = document.getElementById('notification');
@@ -19,7 +20,11 @@
             notificationDiv.appendChild(newMessage);
         };
 
-        eventSource.onerror = function(event) {  console.error('SSE error:', event);    };
+        eventSource.onerror = function(event) {  
+            error_count++;
+            console.log('SSE error: count = ', error_count);
+            console.error('SSE error:', event);    
+        };
     </script>
 </body>
 </html>
