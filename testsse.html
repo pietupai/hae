@@ -13,6 +13,14 @@
         eventSource.onmessage = function(event) {
             document.getElementById('time').innerText = 'Server time: ' + event.data;
         };
+        
+        eventSource.onerror = function(event) {
+            console.error('EventSource failed:', event);
+            // Yritä yhteyden avaamista uudelleen
+            setTimeout(() => {
+                eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
+            }, 10000); // Yritä 10 sekunnin kuluttua uudelleen
+        };
     </script>
 </body>
 </html>
