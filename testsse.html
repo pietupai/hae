@@ -9,23 +9,10 @@
     <h1>SSE Demo</h1>
     <div id="time"></div>
     <script>
-        function startEventSource() {
-            const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
-
-            eventSource.onmessage = function(event) {
-                document.getElementById('time').innerText = 'Server time: ' + event.data;
-            };
-
-            eventSource.onerror = function(event) {
-                console.error('EventSource failed:', event);
-                eventSource.close();
-                // Reconnect after a delay
-                setTimeout(startEventSource, 10000); // Attempt reconnect after 10 seconds
-            };
-        }
-
-        // Start the EventSource connection initially
-        startEventSource();
+        const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
+        eventSource.onmessage = function(event) {
+            document.getElementById('time').innerText = 'Server time: ' + event.data;
+        };
     </script>
 </body>
 </html>
