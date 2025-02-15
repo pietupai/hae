@@ -42,7 +42,7 @@
                     const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
                     setTimeout(startEventSource, reconnectDelay);
                 };
-            }, 400); // 1 sekunnin viive yhteyden muodostumisen jälkeen
+            }, 100); // 1 sekunnin viive yhteyden muodostumisen jälkeen
         }
 
         // Aloita EventSource-yhteys aluksi
