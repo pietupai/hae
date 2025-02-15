@@ -20,6 +20,7 @@
                 document.getElementById('time').innerText = 'Server time: ' + event.data;
                 document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
             };
+            eventSource.onerror = function(event) {  console.error('SSE error:', event);    };
         }
 
         // Start the EventSource connection initially
