@@ -10,7 +10,7 @@
     <div id="notification"></div>
     <script>
         const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/sse');
-        contst error_count = 0;
+        const error_count = 0;
 
         eventSource.onmessage = function(event) {
             const notificationDiv = document.getElementById('notification');
