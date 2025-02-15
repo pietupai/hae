@@ -17,29 +17,32 @@
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
 
-            eventSource.onmessage = function(event) {
-                messageCount++;
-                document.getElementById('time').innerText = 'Server time: ' + event.data;
-                document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+            // Viive yhteyden muodostumisen jälkeen
+            setTimeout(() => {
+                eventSource.onmessage = function(event) {
+                    messageCount++;
+                    document.getElementById('time').innerText = 'Server time: ' + event.data;
+                    document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
 
-                // Viive ennen yhteyden katkaisua ja uudelleen avaamista
-                setTimeout(() => {
+                    // Viive ennen yhteyden katkaisua ja uudelleen avaamista
+                    setTimeout(() => {
+                        eventSource.close();
+                        setTimeout(startEventSource, 4000); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
+                    }, 4000); // 5 sekunnin viive ennen yhteyden katkaisua
+                };
+
+                eventSource.onerror = function(event) {
+                    errorCount++;
+                    console.log('SSE error: count =', errorCount);
+                    console.error('SSE error:', event);
+
+                    // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
                     eventSource.close();
-                    setTimeout(startEventSource, 1000); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
-                }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
-            };
-
-            eventSource.onerror = function(event) {
-                errorCount++;
-                console.log('SSE error: count =', errorCount);
-                console.error('SSE error:', event);
-
-                // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
-                eventSource.close();
-                reconnectAttempts++;
-                const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
-                setTimeout(startEventSource, reconnectDelay);
-            };
+                    reconnectAttempts++;
+                    const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
+                    setTimeout(startEventSource, reconnectDelay);
+                };
+            }, 500); // 1 sekunnin viive yhteyden muodostumisen jälkeen
         }
 
         // Aloita EventSource-yhteys aluksi
