@@ -18,8 +18,8 @@
             notificationDiv.appendChild(newMessage);
         };
 
-        eventSource.onerror = function(event) {
-            console.error('SSE error:', event);
+        eventSource.onerror = function(err) {
+            console.error('SSE error:', err);
         };
     </script>
 </body>
