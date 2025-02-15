@@ -16,10 +16,11 @@
 
         eventSource.onerror = function(event) {
             console.error('EventSource failed:', event);
-            // Yritä yhteyden avaamista uudelleen
+            // Reconnect after a delay
             setTimeout(() => {
+                eventSource.close();
                 eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
-            }, 10000); // Yritä 10 sekunnin kuluttua uudelleen
+            }, 10000); // Attempt reconnect after 10 seconds
         };
     </script>
 </body>
