@@ -17,7 +17,7 @@
 
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
-            console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19););
+            console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
         
             eventSource.onmessage = function(event) {
                 console.log("onmessage : " + new Date().toISOString().replace("T"," ").substring(0, 19));
