@@ -13,41 +13,40 @@
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
-        let time_now = Date().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
-        //Date().toLocaleString("en-US", {timeZone: "Europe/Helsinki"})
+        console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
-            time_now = DateTime.now().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
-            console.log("SSE connection established : " + date().toLocaleString());
-            //console.log("SSE connection established : " + time_now);
-            
-            // Viive yhteyden muodostumisen jälkeen
-            setTimeout(() => {
-                eventSource.onmessage = function(event) {
-                    messageCount++;
-                    document.getElementById('time').innerText = 'Server time: ' + event.data;
-                    document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
-
-                    // Viive ennen yhteyden katkaisua ja uudelleen avaamista
-                    setTimeout(() => {
-                        eventSource.close();
-                        setTimeout(startEventSource, 4800); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
-                    }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
-                };
-
-                eventSource.onerror = function(event) {
-                    errorCount++;
-                    console.log('SSE error: count =', errorCount);
-                    console.error('SSE error:', event);
-
-                    // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
+            console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19););
+        
+            eventSource.onmessage = function(event) {
+                console.log("onmessage : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+                messageCount++;
+                document.getElementById('time').innerText = 'Server time: ' + event.data;
+                document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+    
+                // Viive ennen yhteyden katkaisua ja uudelleen avaamista
+                setTimeout(() => {
+                    console.log("eventSource.close 1 : " + new Date().toISOString().replace("T"," ").substring(0, 19));
                     eventSource.close();
-                    reconnectAttempts++;
-                    const reconnectDelay = 2000;  //Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
-                    setTimeout(startEventSource, reconnectDelay);
-                };
-            }, 1); // 1 millisekunnin viive yhteyden muodostumisen jälkeen
+                    setTimeout(startEventSource, 4800); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
+                    console.log("eventSource.close 2 : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+                }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
+            };
+    
+            eventSource.onerror = function(event) {
+                errorCount++;
+                console.log("SSE error : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+                console.log('SSE error: count =', errorCount);
+                console.error('SSE error:', event);
+    
+                // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
+                eventSource.close();
+                reconnectAttempts++;
+                const reconnectDelay = 20000;  //Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
+                setTimeout(startEventSource, reconnectDelay);
+            };
+     
         }
 
         // Aloita EventSource-yhteys aluksi
