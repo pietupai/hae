@@ -18,7 +18,8 @@
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
             time_now = DateTime.now().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
-            console.log("SSE connection established : " + time_now);
+            console.log("SSE connection established : " + date.toLocaleString());
+            //console.log("SSE connection established : " + time_now);
             
             // Viive yhteyden muodostumisen jälkeen
             setTimeout(() => {
