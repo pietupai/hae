@@ -13,12 +13,13 @@
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
-        let time_now = DateTime.now().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
+        let time_now = Date().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
+        //Date().toLocaleString("en-US", {timeZone: "Europe/Helsinki"})
 
         function startEventSource() {
             const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
             time_now = DateTime.now().setZone('Europe/Helsinki').toLocaleString(DateTime.TIME_WITH_SECONDS);
-            console.log("SSE connection established : " + date.toLocaleString());
+            console.log("SSE connection established : " + date().toLocaleString());
             //console.log("SSE connection established : " + time_now);
             
             // Viive yhteyden muodostumisen jälkeen
