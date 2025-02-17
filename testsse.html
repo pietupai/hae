@@ -8,6 +8,7 @@
 <body>
     <h1>SSE Demo with timer and counter</h1>
     <div id="time"></div>
+    <div id="ping"></div>
     <div id="messageCount"></div>
     <script>
         let messageCount = 0;
@@ -16,40 +17,40 @@
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
         function startEventSource() {
-            const eventSource = new EventSource('https://proxyserver2-sandy.vercel.app/api/events');
+            const eventSource = new EventSource('http://localhost:3000/api/events');
             console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
-        
+
             eventSource.onmessage = function(event) {
-                console.log("onmessage : " + new Date().toISOString().replace("T"," ").substring(0, 19));
-                messageCount++;
-                document.getElementById('time').innerText = 'Server time: ' + event.data;
-                document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
-    
-                // Viive ennen yhteyden katkaisua ja uudelleen avaamista
-                setTimeout(() => {
-                    console.log("eventSource.close 1 : " + new Date().toISOString().replace("T"," ").substring(0, 19));
-                    eventSource.close();
-                    setTimeout(startEventSource, 4800); // Yritä uudelleen yhdistämistä 1 sekunnin kuluttua
-                    console.log("eventSource.close 2 : " + new Date().toISOString().replace("T"," ").substring(0, 19));
-                }, 5000); // 5 sekunnin viive ennen yhteyden katkaisua
+                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
+                if (event.data.startsWith('keep-alive:')) {
+                    console.log("Received keep-alive at " + timestamp + ": " + event.data);
+                    document.getElementById('ping').innerText = 'Received: ' + event.data;
+                } else {
+                    console.log("Received message at " + timestamp + ": " + event.data);
+                    messageCount++;
+                    document.getElementById('time').innerText = 'Server time: ' + event.data;
+                    document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+                }
             };
-    
+
+            eventSource.onopen = function(event) {
+                console.log("SSE connection open at : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+            };
+
             eventSource.onerror = function(event) {
                 errorCount++;
                 console.log("SSE error : " + new Date().toISOString().replace("T"," ").substring(0, 19));
                 console.log('SSE error: count =', errorCount);
                 console.error('SSE error:', event);
-    
-                // Sulje nykyinen yhteys ja yritä uudelleen yhdistämistä
+
                 eventSource.close();
                 reconnectAttempts++;
-                const reconnectDelay = 20000;  //Math.min(5000 * reconnectAttempts, 60000); // Rajoita viive max 60 sekuntiin
+                const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Max 60 sekunnin viive
+                console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
                 setTimeout(startEventSource, reconnectDelay);
             };
-     
         }
 
-        // Aloita EventSource-yhteys aluksi
         startEventSource();
     </script>
 </body>
