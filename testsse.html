@@ -15,6 +15,7 @@
         let errorCount = 0;
         let reconnectAttempts = 0;
         let connectionTimeout;
+        let lastReceivedTime = Date.now();
         const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events';
 
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
@@ -33,15 +34,21 @@
             }
 
             eventSource.onmessage = function(event) {
+                const currentTime = Date.now();
+                const elapsed = ((currentTime - lastReceivedTime) / 1000).toFixed(2);
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 console.log("onmessage : " + timestamp + " - Data: " + event.data);
 
-                if (event.data.startsWith('keep-alive:')) {
-                    document.getElementById('ping').innerText = 'Received: ' + event.data;
-                } else {
-                    messageCount++;
-                    document.getElementById('time').innerText = 'Server time: ' + event.data;
-                    document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+                if (elapsed >= 2) { // Tarkistetaan, että edellisestä lähetyksestä on kulunut vähintään 2 sekuntia
+                    lastReceivedTime = currentTime;
+
+                    if (event.data.startsWith('keep-alive:')) {
+                        document.getElementById('ping').innerText = 'Received: ' + event.data;
+                    } else {
+                        messageCount++;
+                        document.getElementById('time').innerText = 'Server time: ' + event.data;
+                        document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+                    }
                 }
             };
 
