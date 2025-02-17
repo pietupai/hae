@@ -14,7 +14,7 @@
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
-        const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events'; // Käytetään Vercel URL-osoitetta
+        const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events';
 
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
@@ -24,11 +24,11 @@
 
             eventSource.onmessage = function(event) {
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
+                console.log("onmessage : " + timestamp + " - Data: " + event.data);
+
                 if (event.data.startsWith('keep-alive:')) {
-                    console.log("Received keep-alive at " + timestamp + ": " + event.data);
-                    document.getElementById('ping').innerText = 'Received: ' + event.data;
+                    document.getElementById('ping').innerText = 'Received keep-alive: ' + event.data;
                 } else {
-                    console.log("Received message at " + timestamp + ": " + event.data);
                     messageCount++;
                     document.getElementById('time').innerText = 'Server time: ' + event.data;
                     document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
@@ -36,12 +36,14 @@
             };
 
             eventSource.onopen = function(event) {
-                console.log("SSE connection open at : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
+                console.log("SSE connection open at : " + timestamp);
             };
 
             eventSource.onerror = function(event) {
+                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 errorCount++;
-                console.log("SSE error : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+                console.log("SSE error : " + timestamp);
                 console.log('SSE error: count =', errorCount);
                 console.error('SSE error:', event);
 
