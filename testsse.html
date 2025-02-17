@@ -37,10 +37,10 @@
                 appendLog("onmessage : " + timestamp + " - Data: " + event.data);
 
                 if (event.data.startsWith('keep-alive:')) {
-                    document.getElementById('ping').innerText = 'Received keep-alive: ' + event.data;
+                    document.getElementById('ping').innerText = 'Received: ' + event.data;
                 } else {
-                    messageCount++;
                     document.getElementById('time').innerText = 'Server time: ' + event.data;
+                    messageCount++;
                     document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
                 }
             };
