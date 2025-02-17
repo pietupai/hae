@@ -14,10 +14,12 @@
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
+        const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events'; // Käytetään Vercel URL-osoitetta
+
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
         function startEventSource() {
-            const eventSource = new EventSource('http://localhost:3000/api/events');
+            const eventSource = new EventSource(vercelUrl);
             console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
             eventSource.onmessage = function(event) {
