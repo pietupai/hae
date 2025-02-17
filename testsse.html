@@ -10,25 +10,27 @@
     <div id="time"></div>
     <div id="ping"></div>
     <div id="messageCount"></div>
+    <div id="elapsedTime"></div>
     <script>
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
         let connectionTimeout;
         let lastReceivedTime = Date.now();
-        const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events';
+        const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events'; // Muistiksi alkuperäinen URL
+        //const vercelUrl = 'http://localhost:3000/api/events'; // Paikallinen URL
 
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
         function startEventSource() {
-            const eventSource = new EventSource(vercelUrl);
+            let eventSource = new EventSource(vercelUrl);
             console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
             function closeConnection() {
                 console.log("Closing SSE connection to avoid onerror");
                 eventSource.close();
                 reconnectAttempts++;
-                const reconnectDelay = 500; // Lyhennetty viive, 0.5 sekuntia
+                const reconnectDelay = 500; // Lisätään kohtuullinen viive, 0.5 sekuntia
                 console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
                 setTimeout(startEventSource, reconnectDelay);
             }
@@ -48,6 +50,7 @@
                         messageCount++;
                         document.getElementById('time').innerText = 'Server time: ' + event.data;
                         document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
+                        document.getElementById('elapsedTime').innerText = 'Elapsed time between messages: ' + elapsed + 's';
                     }
                 }
             };
