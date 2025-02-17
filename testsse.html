@@ -10,6 +10,7 @@
     <div id="time"></div>
     <div id="ping"></div>
     <div id="messageCount"></div>
+    <div id="log"></div>
     <script>
         let messageCount = 0;
         let errorCount = 0;
@@ -17,14 +18,23 @@
         const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events';
 
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+        const log = document.getElementById('log');
+
+        function appendLog(message) {
+            const logItem = document.createElement('div');
+            logItem.textContent = message;
+            log.appendChild(logItem);
+        }
 
         function startEventSource() {
             const eventSource = new EventSource(vercelUrl);
             console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+            appendLog("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
 
             eventSource.onmessage = function(event) {
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 console.log("onmessage : " + timestamp + " - Data: " + event.data);
+                appendLog("onmessage : " + timestamp + " - Data: " + event.data);
 
                 if (event.data.startsWith('keep-alive:')) {
                     document.getElementById('ping').innerText = 'Received keep-alive: ' + event.data;
@@ -38,6 +48,7 @@
             eventSource.onopen = function(event) {
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 console.log("SSE connection open at : " + timestamp);
+                appendLog("SSE connection open at : " + timestamp);
                 reconnectAttempts = 0; // Nollataan uudelleen yhdistämisyritykset onnistuneen yhdistämisen jälkeen
             };
 
@@ -47,11 +58,13 @@
                 console.log("SSE error : " + timestamp);
                 console.log('SSE error: count =', errorCount);
                 console.error('SSE error:', event);
+                appendLog("SSE error : " + timestamp + " - count = " + errorCount);
 
                 eventSource.close();
                 reconnectAttempts++;
                 const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Max 60 sekunnin viive
                 console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
+                appendLog(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
                 setTimeout(startEventSource, reconnectDelay);
             };
         }
