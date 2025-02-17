@@ -60,7 +60,7 @@
                 console.log("SSE connection open at : " + timestamp);
                 reconnectAttempts = 0; // Nollataan uudelleen yhdistämisyritykset onnistuneen yhdistämisen jälkeen
                 clearTimeout(connectionTimeout);
-                connectionTimeout = setTimeout(closeConnection, 9500); // Katkaistaan yhteys 9.5 sekunnin jälkeen
+                connectionTimeout = setTimeout(closeConnection, 8000); // Katkaistaan yhteys 9.5 sekunnin jälkeen
             };
 
             eventSource.onerror = function(event) {
