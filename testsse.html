@@ -28,7 +28,7 @@
                 console.log("Closing SSE connection to avoid onerror");
                 eventSource.close();
                 reconnectAttempts++;
-                const reconnectDelay = Math.min(1000 * reconnectAttempts, 10000); // Max 10 sekunnin viive
+                const reconnectDelay = 500; // Lyhennetty viive, 0.5 sekuntia
                 console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
                 setTimeout(startEventSource, reconnectDelay);
             }
@@ -61,7 +61,17 @@
             };
 
             eventSource.onerror = function(event) {
+                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
+                errorCount++;
+                console.log("SSE error : " + timestamp);
+                console.log('SSE error: count =', errorCount);
+                console.error('SSE error:', event);
                 clearTimeout(connectionTimeout); // Poistetaan virheellinen logitus yhteyden katkeamisen jälkeen
+            };
+
+            eventSource.onclose = function(event) {
+                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
+                console.log("SSE connection closed at : " + timestamp);
             };
         }
 
