@@ -50,7 +50,7 @@
 
                 eventSource.close();
                 reconnectAttempts++;
-                const reconnectDelay = Math.min(5000 * reconnectAttempts, 60000); // Max 60 sekunnin viive
+                const reconnectDelay = Math.min(1000 * reconnectAttempts, 10000); // Max 10 sekunnin viive
                 console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
                 setTimeout(startEventSource, reconnectDelay);
             };
