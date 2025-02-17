@@ -38,6 +38,7 @@
             eventSource.onopen = function(event) {
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 console.log("SSE connection open at : " + timestamp);
+                reconnectAttempts = 0; // Nollataan uudelleen yhdistämisyritykset onnistuneen yhdistämisen jälkeen
             };
 
             eventSource.onerror = function(event) {
