@@ -39,8 +39,8 @@
                 if (event.data.startsWith('keep-alive:')) {
                     document.getElementById('ping').innerText = 'Received: ' + event.data;
                 } else {
-                    document.getElementById('time').innerText = 'Server time: ' + event.data;
                     messageCount++;
+                    document.getElementById('time').innerText = 'Server time: ' + event.data;
                     document.getElementById('messageCount').innerText = 'Messages received: ' + messageCount;
                 }
             };
