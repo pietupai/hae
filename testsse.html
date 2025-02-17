@@ -14,6 +14,7 @@
         let messageCount = 0;
         let errorCount = 0;
         let reconnectAttempts = 0;
+        let connectionTimeout;
         const vercelUrl = 'https://proxyserver2-sandy.vercel.app/api/events';
 
         console.log("Script started : " + new Date().toISOString().replace("T"," ").substring(0, 19));
@@ -21,6 +22,15 @@
         function startEventSource() {
             const eventSource = new EventSource(vercelUrl);
             console.log("SSE connection established : " + new Date().toISOString().replace("T"," ").substring(0, 19));
+
+            function closeConnection() {
+                console.log("Closing SSE connection to avoid onerror");
+                eventSource.close();
+                reconnectAttempts++;
+                const reconnectDelay = Math.min(1000 * reconnectAttempts, 10000); // Max 10 sekunnin viive
+                console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
+                setTimeout(startEventSource, reconnectDelay);
+            }
 
             eventSource.onmessage = function(event) {
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
@@ -39,20 +49,12 @@
                 const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
                 console.log("SSE connection open at : " + timestamp);
                 reconnectAttempts = 0; // Nollataan uudelleen yhdistämisyritykset onnistuneen yhdistämisen jälkeen
+                clearTimeout(connectionTimeout);
+                connectionTimeout = setTimeout(closeConnection, 9500); // Katkaistaan yhteys 9.5 sekunnin jälkeen
             };
 
             eventSource.onerror = function(event) {
-                const timestamp = new Date().toISOString().replace("T"," ").substring(0, 19);
-                errorCount++;
-                console.log("SSE error : " + timestamp);
-                console.log('SSE error: count =', errorCount);
-                console.error('SSE error:', event);
-
-                eventSource.close();
-                reconnectAttempts++;
-                const reconnectDelay = Math.min(1000 * reconnectAttempts, 10000); // Max 10 sekunnin viive
-                console.log(`Reconnecting in ${reconnectDelay / 1000} seconds...`);
-                setTimeout(startEventSource, reconnectDelay);
+                clearTimeout(connectionTimeout); // Poistetaan virheellinen logitus yhteyden katkeamisen jälkeen
             };
         }
 
