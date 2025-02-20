@@ -18,6 +18,5 @@ jobs:
         TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
         echo "Time: $TIMESTAMP"
         //curl -X POST -H "Content-Type: application/json" -d "{""text"":""response.txt file changed at '$TIMESTAMP'""}" https://proxyserver2-sandy.vercel.app/api/webhook
-        TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
         curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"response.txt file changed at $TIMESTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
 
