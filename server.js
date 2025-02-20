@@ -19,7 +19,7 @@ app.post('/api/webhook', async (req, res) => {
     const body = req.body;
     console.log('Webhook event received:', body);
 
-    // Fetch the updated content from response.txt
+    // Fetch the updated content from the defined URLs
     const responseUrls = [
       'https://www.google.com/',
       'https://www.iki.fi/',
