@@ -50,8 +50,8 @@
         }
 
         async function fetchInitialFiles() {
-            const requestUrl = 'https://api.github.com/repos/pietupai/hae/contents/request.txt?timestamp=' + new Date().getTime();
-            const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
+	    const requestUrl = 'https://raw.githubusercontent.com/pietupai/hae/main/request.txt?timestamp=' + new Date().getTime();
+            const responseUrl = 'https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=' + new Date().getTime();
 
             const initialRequestText = await fetchFile(requestUrl);
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -61,7 +61,7 @@
         }
 
         async function checkForUpdates() {
-            const responseUrl = 'https://api.github.com/repos/pietupai/hae/contents/response.txt?timestamp=' + new Date().getTime();
+            const responseUrl = 'https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=' + new Date().getTime();
             const responseContent = document.getElementById('responseContent');
             try {
                 const updatedContent = await fetchFile(responseUrl);
