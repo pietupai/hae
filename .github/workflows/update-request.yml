@@ -15,7 +15,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Show received inputs
+    - name: Show received inputs 
       run: |
         echo "Received URL: ${{ github.event.inputs.url }}"
 
