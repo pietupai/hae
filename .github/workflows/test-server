@@ -1,0 +1,32 @@
+name: SSE Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start test server
+      run: |
+        nohup npm run test-server &
+
+    - name: Test SSE events
+      run: |
+        sleep 5
+        curl -X POST http://localhost:3000/api/webhook -H "Content-Type: application/json" -d '{"text": "response.txt file changed"}'
+        curl http://localhost:3000/api/sse
