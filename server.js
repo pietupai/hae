@@ -29,15 +29,22 @@ app.post('/api/webhook', async (req, res) => {
     let responseData = '';
 
     for (const url of responseUrls) {
+      console.log(`Fetching from URL: ${url}`);
       const response = await fetch(url, { redirect: 'manual' }); // Handle redirects manually
 
       if (response.status === 301 || response.status === 302) {
         const redirectUrl = response.headers.get('location');
         console.log(`Redirected to: ${redirectUrl}`);
         const redirectedResponse = await fetch(redirectUrl);
-        responseData += await redirectedResponse.text();
+        const redirectedData = await redirectedResponse.text();
+
+        // Append redirected data to responseData
+        responseData += redirectedData;
       } else {
-        responseData += await response.text();
+        const data = await response.text();
+
+        // Append fetched data to responseData
+        responseData += data;
       }
     }
 
