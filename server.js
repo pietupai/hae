@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const events = require('events');
 const fetch = require('node-fetch');
-const fs = require('fs').promises; // Lisätään tiedoston käsittelyyn tarvittava moduuli
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,10 +25,6 @@ app.post('/api/webhook', async (req, res) => {
     const response = await fetch(responseUrl, { headers: { 'Cache-Control': 'no-cache' } });
 
     const data = await response.text();
-
-    // Save response data to response.txt
-    await fs.writeFile('response.txt', data);
-    console.log('Response data saved to response.txt');
 
     // Emit event with the updated content
     console.log(`Emitting newWebhook event with data: ${data}`);
