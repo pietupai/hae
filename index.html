@@ -118,7 +118,7 @@
 
                     if (response.ok) {
                         // Perform a single update check after 30 seconds
-                        setTimeout(checkForUpdates, 60000);
+                        setTimeout(checkForUpdates, 30000);
                     } else {
                         const errorText = await response.text();
                         console.error('Workflow error:', errorText);
