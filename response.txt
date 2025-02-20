@@ -1,3 +1,3 @@
-<HEAD><TITLE>8Redirection</TITLE></HEAD>
+<HEAD><TITLE>9Redirection</TITLE></HEAD>
 <BODY><H1>Query redirected to another address</H1>
 This is only a redirection service, the document can be found <A HREF="http://www.iki.fi/index.html">here</A>.<P></BODY>
