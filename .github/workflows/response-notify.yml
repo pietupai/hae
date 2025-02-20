@@ -20,5 +20,4 @@ jobs:
         TEXTSTAMP="response.txt file changed at '$TIMESTAMP'"
         echo "TEXTSTAMP: $TEXTSTAMP"
         curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"$TEXTSTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
-        #curl -X POST -H "Content-Type: application/json" -d "{""text"":""response.txt file changed at '$TIMESTAMP'""}" https://proxyserver2-sandy.vercel.app/api/webhook
-        #curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"response.txt file changed at $TIMESTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
+        
