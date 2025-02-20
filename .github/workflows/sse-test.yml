@@ -21,9 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Start server
+    - name: Start test server
       run: |
-        nohup npm start &
+        nohup npm run test-server &
 
     - name: Test SSE events
       run: |
