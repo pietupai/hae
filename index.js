@@ -18,16 +18,18 @@ app.post('/api/webhook', async (req, res) => {
     const body = req.body;
     console.log('Webhook event received:', body);
 
-    // Fetch the updated response.txt content
-    const response = await fetch('https://raw.githubusercontent.com/pietupai/hae/main/response.txt', {
-      redirect: 'follow'
-    });
+    // Fetch the updated content from response.txt with a timestamp to avoid caching
+    const timestamp = new Date().getTime();
+    const responseUrl = `https://raw.githubusercontent.com/pietupai/hae/main/response.txt?timestamp=${timestamp}`;
+    console.log(`Fetching from URL: ${responseUrl}`);
+    const response = await fetch(responseUrl, { headers: { 'Cache-Control': 'no-cache' } });
+
     const data = await response.text();
 
     // Emit event with the updated content
     console.log(`Emitting newWebhook event with data: ${data}`);
     req.app.locals.eventEmitter.emit('newWebhook', data);
-    console.log('Event emitted successfully');
+    console.log('Event emitted successfully with data');
 
     res.status(200).send(data);
   } catch (error) {
