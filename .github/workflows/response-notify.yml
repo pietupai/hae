@@ -17,7 +17,11 @@ jobs:
       run: |
         TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
         echo "Time: $TIMESTAMP"
-        TEXTSTAMP="response.txt file changed at '$TIMESTAMP'"
-        TEXTSTAMP=$(cat response.txt)
-        echo "TEXTSTAMP: $TEXTSTAMP"
-        curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"$TEXTSTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
+        #TEXTSTAMP="response.txt file changed at '$TIMESTAMP'"
+        #TEXTSTAMP=$(cat response.txt)
+        #echo "TEXTSTAMP: $TEXTSTAMP"
+        #curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"$TEXTSTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
+        #TEXTSTAMP=$(cat response.txt)
+        PAYLOAD=$(jq -n --arg content "$TEXTSTAMP" '{content: $content}')
+        echo "Payload: $PAYLOAD"
+        curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" https://proxyserver2-sandy.vercel.app/api/webhook
