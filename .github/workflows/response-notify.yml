@@ -22,6 +22,7 @@ jobs:
         #echo "TEXTSTAMP: $TEXTSTAMP"
         #curl -X POST -H "Content-Type: application/json" -d "{\"text\":\"$TEXTSTAMP\"}" https://proxyserver2-sandy.vercel.app/api/webhook
         TEXTSTAMP=$(cat response.txt)
+        echo "TEXTSTAMP: $TEXTSTAMP"
         PAYLOAD=$(jq -n --arg content "$TEXTSTAMP" '{content: $content}')
         echo "Payload: $PAYLOAD"
         curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" https://proxyserver2-sandy.vercel.app/api/webhook
